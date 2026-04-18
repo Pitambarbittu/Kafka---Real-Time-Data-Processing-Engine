@@ -1,108 +1,3 @@
-# import streamlit as st
-# import pandas as pd
-# import numpy as np
-# import time
-# from sklearn.ensemble import IsolationForest
-
-# # --- PROJECT IDENTITY ---
-# st.set_page_config(page_title="NIT Srinagar | Real-Time Engine", layout="wide")
-
-# st.title("🚀 Intelligent Real-Time Data Processing Engine")
-# st.markdown(f"""
-# **Candidate:** Alina Pervaiz | **Enrolment:** 2024MCSECS019  
-# **Supervisors:** Dr. Shaima Qureshi & Dr. Mahreen Salim
-# """)
-
-# # --- SYSTEM STATE INITIALIZATION ---
-# if 'processed_count' not in st.session_state:
-#     st.session_state.processed_count = 0
-# if 'buffer' not in st.session_state:
-#     st.session_state.buffer = pd.DataFrame(columns=['Timestamp', 'Workload', 'State', 'Window_ID'])
-
-# # --- THE PROCESSING ENGINE ---
-# def run_realtime_pipeline():
-#     # 1. SIMULATE INGESTION (Hadoop Replacement Logic)
-#     # We process in 'Windows' as per your flowchart
-#     window_id = f"W-{st.session_state.processed_count // 10}"
-#     new_data = np.random.normal(60, 10)
-    
-#     # Inject high-velocity spikes (Anomalies)
-#     if np.random.random() > 0.95: 
-#         new_data += 65 
-
-#     # 2. ML: ISOLATION FOREST (Anomaly Detection)
-#     # This is the 'Intelligent Management' part of your PPT
-#     is_anomaly = False
-#     if len(st.session_state.buffer) > 10:
-#         model = IsolationForest(contamination=0.1)
-#         preds = model.fit_predict(st.session_state.buffer[['Workload']])
-#         is_anomaly = True if preds[-1] == -1 else False
-
-#     # 3. UPDATE SYSTEM METRICS
-#     state = "CRITICAL" if is_anomaly else "STABLE"
-#     new_msg = pd.DataFrame({
-#         'Timestamp': [pd.Timestamp.now()],
-#         'Workload': [new_data],
-#         'State': [state],
-#         'Window_ID': [window_id]
-#     })
-    
-#     st.session_state.buffer = pd.concat([st.session_state.buffer, new_msg]).tail(50)
-#     st.session_state.processed_count += 1
-
-# # --- LIVE DASHBOARD UI ---
-# # Row 1: High-Level Stats
-# m1, m2, m3, m4 = st.columns(4)
-# run_realtime_pipeline()
-
-# latest_data = st.session_state.buffer.iloc[-1]
-
-# m1.metric("Total Data Packets", st.session_state.processed_count)
-# m2.metric("Active Window", latest_data['Window_ID'])
-# m3.metric("Current Workload", f"{latest_data['Workload']:.2f}")
-# m4.metric("System Health", latest_data['State'], delta_color="inverse")
-
-# # Row 2: Visual Charts
-# st.divider()
-# c1, c2 = st.columns([2, 1])
-
-# with c1:
-#     st.subheader("📡 Real-Time Kafka Stream")
-#     # Show the line chart of the workload
-#     st.line_chart(st.session_state.buffer.set_index('Timestamp')['Workload'])
-
-# with c2:
-#     st.subheader("🛠️ Auto-Scaling Logic")
-#     # Logic based on your PPT Slide 15: Dynamically scaling partitions
-#     if latest_data['Workload'] > 90:
-#         st.warning("⚠️ High Load Detected")
-#         st.progress(90, text="Scaling Partitions: 3 -> 6")
-#     elif latest_data['State'] == "CRITICAL":
-#         st.error("🚨 Anomaly: Rerouting Traffic")
-#     else:
-#         st.success("✅ Load Optimal")
-#         st.progress(30, text="Partitions: 3 (Stable)")
-
-# # Row 3: Raw Window Logs (To verify the 'Window Shifting' you asked for)
-# st.subheader("📋 Active Process Window Logs")
-# st.dataframe(st.session_state.buffer.sort_values(by='Timestamp', ascending=False), use_container_width=True)
-
-# # Loop the app
-# time.sleep(0.5)
-# st.rerun()
-
-
-"""
-=============================================================
-  Real-Time Data Processing Engine using Apache Kafka
-  Candidate  : Alina Pervaiz | 2024MCSECS019
-  Institute  : NIT Srinagar — CSE Department | MTech 3rd Sem
-  Supervisors: Dr. Shaima Qureshi & Dr. Mahreen Salim
-  
-  FIX v2: Zero-flicker refresh + responsive Critical Apps layout
-=============================================================
-"""
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -119,9 +14,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ──────────────────────────────────────────────
-# CSS  — includes flicker-kill + responsive grid fix
-# ──────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -363,9 +255,6 @@ html, body, [class*="css"], .stApp {
 """, unsafe_allow_html=True)
 
 
-# ──────────────────────────────────────────────
-# SESSION STATE
-# ──────────────────────────────────────────────
 def init():
     defaults = {
         'tick': 0, 'running': True,
@@ -382,9 +271,6 @@ def init():
 init()
 
 
-# ──────────────────────────────────────────────
-# SIDEBAR
-# ──────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
     <div style='padding:10px 0 22px;'>
@@ -473,9 +359,6 @@ SCALING LOG
     """, unsafe_allow_html=True)
 
 
-# ──────────────────────────────────────────────
-# PIPELINE ENGINE
-# ──────────────────────────────────────────────
 def run_pipeline():
     st.session_state.tick += 1
     t = st.session_state.tick
@@ -526,9 +409,6 @@ buf    = st.session_state.buffer
 latest = buf.iloc[-1] if len(buf) > 0 else None
 
 
-# ──────────────────────────────────────────────
-# SYSTEM INFO — cached 2s, non-blocking
-# ──────────────────────────────────────────────
 @st.cache_data(ttl=2)
 def get_system_info():
     uname = platform.uname()
@@ -582,9 +462,6 @@ def get_system_info():
     }
 
 
-# ──────────────────────────────────────────────
-# HEADER BAR
-# ──────────────────────────────────────────────
 is_critical = latest is not None and latest['state'] == 'CRITICAL'
 dot_class   = "dot-red-anim" if is_critical else "dot-green-anim"
 status_lbl  = "CRITICAL" if is_critical else "RUNNING"
@@ -617,9 +494,6 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 
-# ──────────────────────────────────────────────
-# KPI CARDS
-# ──────────────────────────────────────────────
 if latest is not None:
     wl     = latest['workload']
     wl_col = "#F85149" if wl > 85 else "#D29922" if wl > 60 else "#3FB950"
@@ -678,9 +552,6 @@ else:
     """, unsafe_allow_html=True)
 
 
-# ──────────────────────────────────────────────
-# TABS
-# ──────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "📡  Live Stream",
     "🧠  ML Detection",
@@ -692,9 +563,6 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
 ])
 
 
-# ══════════════════════════════════════════════
-# TAB 1 — LIVE STREAM
-# ══════════════════════════════════════════════
 with tab1:
     c1, c2 = st.columns([3, 2], gap="large")
     with c1:
@@ -748,9 +616,6 @@ with tab1:
             """, unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════
-# TAB 2 — ML DETECTION
-# ══════════════════════════════════════════════
 with tab2:
     st.markdown('<div class="sec-title">🧠 Isolation Forest — Real-Time Anomaly Detection</div>', unsafe_allow_html=True)
     if len(buf) >= 5:
@@ -807,9 +672,6 @@ with tab2:
         st.markdown('<div class="alert-yellow">⏳ Need at least 5 data points. Please wait a moment...</div>', unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════
-# TAB 3 — AUTO-SCALING
-# ══════════════════════════════════════════════
 with tab3:
     st.markdown('<div class="sec-title">⚙️ Kafka Partition Auto-Scaling Engine</div>', unsafe_allow_html=True)
     sc1, sc2 = st.columns([2, 1], gap="large")
@@ -858,9 +720,6 @@ with tab3:
         """, unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════
-# TAB 4 — DATA LOGS
-# ══════════════════════════════════════════════
 with tab4:
     st.markdown('<div class="sec-title">📋 Process Window Logs</div>', unsafe_allow_html=True)
     fc1, fc2, fc3 = st.columns([2, 2, 1])
@@ -924,9 +783,6 @@ with tab4:
     """, unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════
-# TAB 5 — ANALYTICS
-# ══════════════════════════════════════════════
 with tab5:
     st.markdown('<div class="sec-title">📊 Session Analytics</div>', unsafe_allow_html=True)
     if len(buf) >= 5:
@@ -990,10 +846,6 @@ with tab5:
         st.markdown('<div class="alert-yellow">⏳ Analytics will appear after a few seconds of data collection.</div>', unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════
-# TAB 6 — SYSTEM MONITOR
-# Uses st.fragment with run_every=3 for flicker-free refresh
-# ══════════════════════════════════════════════
 with tab6:
     @st.fragment(run_every=3)
     def render_system_monitor():
@@ -1115,13 +967,6 @@ with tab6:
     render_system_monitor()
 
 
-# ══════════════════════════════════════════════
-# TAB 7 — CRITICAL APPS
-# FIX: Build the ENTIRE HTML block as one string first, then
-# call st.markdown() ONCE with unsafe_allow_html=True.
-# Never embed large HTML blobs inside an outer f-string —
-# Streamlit's sanitiser strips tags found in interpolated vars.
-# ══════════════════════════════════════════════
 with tab7:
     @st.fragment(run_every=3)
     def render_critical_apps():
@@ -1229,7 +1074,6 @@ with tab7:
             '</div>'  # end crit-grid
         )
 
-        # ── Single markdown call — no interpolated HTML blobs ──
         st.markdown(full_html, unsafe_allow_html=True)
 
         # ── CPU bar chart ──
@@ -1247,10 +1091,6 @@ with tab7:
 
     render_critical_apps()
 
-
-# ──────────────────────────────────────────────
-# FOOTER
-# ──────────────────────────────────────────────
 st.markdown("""
 <div style='text-align:center;padding:16px;margin-top:24px;
             border-top:1px solid #21262D;font-size:11px;color:#484F58;'>
@@ -1261,10 +1101,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-# ──────────────────────────────────────────────
-# AUTO-REFRESH — only Kafka pipeline, fragments handle system UI
-# ──────────────────────────────────────────────
 if st.session_state.running:
     time.sleep(refresh_rate)
     st.rerun()
