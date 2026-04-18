@@ -1,3 +1,6 @@
+# deployed on - `https://share.streamlit.io/`
+## 🎉Live Running on - `https://kafka---real-time-data-processing-engine-uocsgcmtej2jdm83jnw82.streamlit.app/` [Click Me](https://kafka---real-time-data-processing-engine-uocsgcmtej2jdm83jnw82.streamlit.app/)
+
 # ⚡ Real-Time Data Processing Engine using Apache Kafka
 
 **Candidate:** Alina Pervaiz | 2024MCSECS019
